@@ -6,12 +6,15 @@ CREATE TABLE Impuesto (
 );
 
 CREATE TABLE Tipo_Renta (
-    codigo_renta CHAR(3) PRIMARY KEY,
+    codigo_renta CHAR(3) NOT NULL,
+    tipo_de_telefono VARCHAR(20) NOT NULL,
     descripcion TEXT NOT NULL,
     costo NUMERIC(10,2) NOT NULL,
     fecha DATE NOT NULL,
     cupo INTEGER NOT NULL,
     costo_impulso_adicional NUMERIC(10,2)
+    PRIMARY KEY (codigo_renta, tipo_de_telefono)
+     
 );
 
 CREATE TABLE Servicio (
