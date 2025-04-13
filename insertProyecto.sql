@@ -16,11 +16,11 @@ INSERT INTO Impuesto (codigo_de_impuesto, descripcion, monto, fecha) VALUES
     ('IVM', 'Impuesto de Ventas al Mayor', 12.50, '2020-09-01');
 
 -- Tipo de Renta
-INSERT INTO Tipo_Renta (codigo_renta, descripcion, costo, fecha, cupo, costo_impulso_adicional) VALUES
-    ('BAS', 'Básica', 194.00, '2020-08-01', 100, NULL),
-    ('INT', 'Intermedia', 304.00, '2020-08-01', 200, NULL),
-    ('REN', 'Rendidora Residencial', 555.00, '2020-08-01', 300, NULL),
-    ('UNI', 'Única', 800.00, '2020-08-01', 500, NULL);
+INSERT INTO Tipo_Renta (codigo_renta, descripcion, tipo_de_telefono,  costo, fecha, cupo, costo_impulso_adicional) VALUES
+    ('BAS', 'Básica', 'Residencial' 194.00, '2020-08-01', 50, 5.17),
+    ('INT', 'Intermedia','Residencial', 304.00, '2020-08-01', 90, 3.69),
+    ('REN', 'Rendidora Residencial','Residencial', 555.00, '2020-08-01', 130, 3.19),
+    ('UNI', 'Única', 'Comercial',  800.00, '2020-08-01', 0, 5.75);
 
 -- Tipos de servicio
 INSERT INTO Servicio (codigo_servicio, descripcion, monto, fecha) VALUES
