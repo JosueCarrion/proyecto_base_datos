@@ -10,14 +10,18 @@ where codigo_servicio = 'STA' and cont_serv = 1 and tipo_de_telefono = 'Residenc
 b. Proporcionar, para cada contrato comercial, las llamadas que excedan de 10 minutos de duración, en un rango de fechas dado (del 01/10/2020 al 31/10/2020).
 
 
-
-select contrato.numero_telefonico as contrato, id_llamada, numero_destino, operador, minutos, segundos, fecha, hora, codigo_destino from llamada left join contrato on llamada.numero_telefonico = contrato.numero_telefonico  where tipo_de_telefono = 'Comercial' and minutos > 10 and fecha between '2020-10-01' and '2020-10-31';
+select contrato.numero_telefonico as contrato, null as compania_celular, id_llamada, numero_destino, operador, minutos, segundos, fecha, hora, codigo_destino from llamada left join contrato on llamada.numero_telefonico = contrato.numero_telefonico  where tipo_de_telefono = 'Comercial' and minutos > 10 and fecha between '2020-10-01' and '2020-10-31'
+UNION ALL
+select contrato.numero_telefonico as contrato,compania_celular,  id_llamada, numero_destino, operador, minutos, segundos, fecha, hora, codigo_destino from Celular left join contrato on Celular.numero_telefonico = contrato.numero_telefonico  where tipo_de_telefono = 'Comercial' and minutos > 10 and fecha between '2020-10-01' and '2020-10-31';
 
 
 -- Consulta 3
 c. Proporcionar, para cada contrato comercial, las llamadas cuyo destino sea Estados Unidos de América, en un rango de fechas dado (del 01/10/2020 al 31/10/2020).
 
-select contrato.numero_telefonico as contrato,id_llamada, numero_destino, operador, minutos, segundos, fecha, hora, codigo_destino from llamada left join contrato on llamada.numero_telefonico = contrato.numero_telefonico  where tipo_de_telefono = 'Comercial' and codigo_destino = '001' and fecha between '2020-10-01' and '2020-10-31';
+
+select contrato.numero_telefonico as contrato, null as compania_celular, id_llamada, numero_destino, operador, minutos, segundos, fecha, hora, codigo_destino from llamada left join contrato on llamada.numero_telefonico = contrato.numero_telefonico  where tipo_de_telefono = 'Comercial' and codigo_destino = '001' and fecha between '2020-10-01' and '2020-10-31'
+UNION ALL
+select contrato.numero_telefonico as contrato,compania_celular, id_llamada, numero_destino, operador, minutos, segundos, fecha, hora, codigo_destino from Celular left join contrato on Celular.numero_telefonico = contrato.numero_telefonico  where tipo_de_telefono = 'Comercial' and codigo_destino = '001' and fecha between '2020-10-01' and '2020-10-31';
 
 
 -- Consulta 4
