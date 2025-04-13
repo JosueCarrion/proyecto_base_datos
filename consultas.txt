@@ -2,24 +2,27 @@
 a. Proporcionar aquellos contratos residenciales que sólo están afiliados al 
 servicio “Teleamigo”.
 
-select tiene_servicio.numero_telefonico,count_serv.cont_serv,tiene_servicio.codigo_servicio   from tiene_servicio left join (select numero_telefonico, count(codigo_servicio) as cont_serv from tiene_servicio group by numero_telefonico) count_serv on tiene_servicio.numero_telefonico = count_serv.numero_telefonico
-where codigo_servicio = 'STA' and cont_serv = 1;
+select tiene_servicio.numero_telefonico,count_serv.cont_serv,tiene_servicio.codigo_servicio, contrato.tipo_de_telefono  from (tiene_servicio left join (select numero_telefonico, count(codigo_servicio) as cont_serv from tiene_servicio group by numero_telefonico) count_serv on tiene_servicio.numero_telefonico = count_serv.numero_telefonico) left join contrato on count_serv.numero_telefonico = contrato.numero_telefonico
+where codigo_servicio = 'STA' and cont_serv = 1 and tipo_de_telefono = 'Residencial';
+
 
 -- Consulta 2
 b. Proporcionar, para cada contrato comercial, las llamadas que excedan de 10 minutos de duración, en un rango de fechas dado (del 01/10/2020 al 31/10/2020).
 
 
-select numero_telefonico as contrato, id_llamada, numero_destino, operador, minutos, segundos, fecha, hora, codigo_destino from llamada where minutos > 10 and fecha between '2020-10-01' and '2020-10-31';
+
+select contrato.numero_telefonico as contrato, id_llamada, numero_destino, operador, minutos, segundos, fecha, hora, codigo_destino from llamada left join contrato on llamada.numero_telefonico = contrato.numero_telefonico  where tipo_de_telefono = 'Comercial' and minutos > 10 and fecha between '2020-10-01' and '2020-10-31';
 
 
 -- Consulta 3
 c. Proporcionar, para cada contrato comercial, las llamadas cuyo destino sea Estados Unidos de América, en un rango de fechas dado (del 01/10/2020 al 31/10/2020).
 
-select numero_telefonico as contrato,id_llamada, numero_destino, operador, minutos, segundos, fecha, hora, codigo_destino from llamada where codigo_destino = '001' and fecha between '2020-10-01' and '2020-10-31';
+select contrato.numero_telefonico as contrato,id_llamada, numero_destino, operador, minutos, segundos, fecha, hora, codigo_destino from llamada left join contrato on llamada.numero_telefonico = contrato.numero_telefonico  where tipo_de_telefono = 'Comercial' and codigo_destino = '001' and fecha between '2020-10-01' and '2020-10-31';
+
 
 -- Consulta 4
 d. Proporcionar, para cada suscriptor, las llamadas no locales a teléfonos
 celulares “Telenet”, en un rango de fechas dado (del 01/10/2020 al
 31/10/2020). 
 
-select contrato.id_suscriptor, llamada.* from llamada left join contrato on llamada.numero_telefonico = contrato.numero_telefonico where compania_celular = 'TEL' and fecha between '2020-10-01' and '2020-10-31';
+select contrato.id_suscriptor, Celular.* from Celular left join contrato on Celular.numero_telefonico = contrato.numero_telefonico where compania_celular = 'TEL' and fecha between '2020-10-01' and '2020-10-31';
