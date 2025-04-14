@@ -246,10 +246,10 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- CREATE TRIGGER trg_actualizar_fechas_contrato
--- BEFORE INSERT OR UPDATE ON contrato
--- FOR EACH ROW
--- EXECUTE FUNCTION actualizar_fechas_contrato();
+CREATE TRIGGER trg_actualizar_fechas_contrato
+BEFORE INSERT OR UPDATE ON contrato
+FOR EACH ROW
+EXECUTE FUNCTION actualizar_fechas_contrato();
 
 -- CREATE OR REPLACE FUNCTION calcular_tarifa_llamada()
 -- RETURNS TRIGGER AS $$
