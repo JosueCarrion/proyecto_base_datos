@@ -18,3 +18,8 @@ DROP TABLE IF EXISTS Servicio CASCADE;
 DROP TABLE IF EXISTS Tipo_Renta CASCADE;
 DROP TABLE IF EXISTS Compania_Celular CASCADE;
 DROP TABLE IF EXISTS Impuesto CASCADE;
+
+DROP FUNCTION IF EXISTS calcular_dia_pago;
+DROP FUNCTION IF EXISTS calcular_dia_facturacion;
+DROP FUNCTION IF EXISTS actualizar_fechas_contrato;
+DROP TRIGGER IF EXISTS trg_actualizar_fechas_contrato ON Contrato;

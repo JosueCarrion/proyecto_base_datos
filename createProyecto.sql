@@ -1,3 +1,42 @@
+CREATE OR REPLACE FUNCTION calcular_dia_facturacion(numero_telefono TEXT) 
+RETURNS INT AS $$
+BEGIN
+    RETURN CASE RIGHT(TRIM(numero_telefono), 1)
+        WHEN '0' THEN 1
+        WHEN '1' THEN 4
+        WHEN '2' THEN 7
+        WHEN '3' THEN 10
+        WHEN '4' THEN 13
+        WHEN '5' THEN 16
+        WHEN '6' THEN 19
+        WHEN '7' THEN 22
+        WHEN '8' THEN 25
+        WHEN '9' THEN 28
+        ELSE NULL
+    END;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION calcular_dia_pago(numero_telefono TEXT) 
+RETURNS INT AS $$
+BEGIN
+    RETURN CASE RIGHT(TRIM(numero_telefono), 1)
+        WHEN '0' THEN 25
+        WHEN '1' THEN 28
+        WHEN '2' THEN 1
+        WHEN '3' THEN 4
+        WHEN '4' THEN 7
+        WHEN '5' THEN 10
+        WHEN '6' THEN 13
+        WHEN '7' THEN 16
+        WHEN '8' THEN 19
+        WHEN '9' THEN 22
+        ELSE NULL
+    END;
+END;
+$$ LANGUAGE plpgsql;
+
+
 CREATE TABLE Impuesto (
     codigo_de_impuesto CHAR(3) PRIMARY KEY,
     descripcion TEXT NOT NULL,
@@ -79,6 +118,8 @@ CREATE TABLE Contrato (
     tipo_de_telefono VARCHAR(20) NOT NULL,
     direccion_de_suministro TEXT NOT NULL,
     id_suscriptor INT NOT NULL,
+    fecha_de_facturacion INT NULL,
+    fecha_de_pago INT NULL,
     codigo_renta CHAR(3) NOT NULL,
     codigo_sucursal VARCHAR(20),
     PRIMARY KEY(codigo_sucursal, numero_telefonico),
@@ -178,3 +219,32 @@ CREATE TABLE Cuesta (
     FOREIGN KEY (origen) REFERENCES Sucursal(codigo_sucursal) ON DELETE CASCADE,
     FOREIGN KEY (destino) REFERENCES Sucursal(codigo_sucursal) ON DELETE CASCADE
 );
+
+
+CREATE OR REPLACE FUNCTION actualizar_fechas_contrato()
+RETURNS TRIGGER AS $$
+DECLARE
+    dia_facturacion INT;
+    dia_pago INT;
+
+BEGIN
+    dia_facturacion := calcular_dia_facturacion(NEW.numero_telefonico);
+    dia_pago := calcular_dia_pago(NEW.numero_telefonico);
+    
+    -- Si no se pudo determinar el día, usar un valor por defecto (ej. día 1)
+    IF dia_facturacion IS NULL THEN
+        dia_facturacion := 1;
+    END IF;
+    
+    -- Asignar los valores calculados a los campos del registro
+    NEW.fecha_de_facturacion := dia_facturacion;
+    NEW.fecha_de_pago := dia_pago;
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_actualizar_fechas_contrato
+BEFORE INSERT OR UPDATE ON contrato
+FOR EACH ROW
+EXECUTE FUNCTION actualizar_fechas_contrato();
