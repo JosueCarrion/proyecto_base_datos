@@ -1,3 +1,6 @@
+Josue Carrion 30020470
+Jhosber Ynojosa 31116618
+
 -- Consulta 1
 a. Proporcionar aquellos contratos residenciales que sólo están afiliados al 
 servicio “Teleamigo”.
