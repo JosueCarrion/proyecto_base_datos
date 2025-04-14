@@ -246,35 +246,35 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER trg_actualizar_fechas_contrato
-BEFORE INSERT OR UPDATE ON contrato
-FOR EACH ROW
-EXECUTE FUNCTION actualizar_fechas_contrato();
+-- CREATE TRIGGER trg_actualizar_fechas_contrato
+-- BEFORE INSERT OR UPDATE ON contrato
+-- FOR EACH ROW
+-- EXECUTE FUNCTION actualizar_fechas_contrato();
 
-CREATE OR REPLACE FUNCTION calcular_tarifa_llamada()
-RETURNS TRIGGER AS $$
-DECLARE
-    dia_facturacion INT;
-    dia_pago INT;
+-- CREATE OR REPLACE FUNCTION calcular_tarifa_llamada()
+-- RETURNS TRIGGER AS $$
+-- DECLARE
+--     dia_facturacion INT;
+--     dia_pago INT;
 
-BEGIN
-    dia_facturacion := calcular_dia_facturacion(NEW.numero_telefonico);
-    dia_pago := calcular_dia_pago(NEW.numero_telefonico);
+-- BEGIN
+--     dia_facturacion := calcular_dia_facturacion(NEW.numero_telefonico);
+--     dia_pago := calcular_dia_pago(NEW.numero_telefonico);
     
-    -- Si no se pudo determinar el día, usar un valor por defecto (ej. día 1)
-    IF dia_facturacion IS NULL THEN
-        dia_facturacion := 1;
-    END IF;
+--     -- Si no se pudo determinar el día, usar un valor por defecto (ej. día 1)
+--     IF dia_facturacion IS NULL THEN
+--         dia_facturacion := 1;
+--     END IF;
     
-    -- Asignar los valores calculados a los campos del registro
-    NEW.fecha_de_facturacion := dia_facturacion;
-    NEW.fecha_de_pago := dia_pago;
+--     -- Asignar los valores calculados a los campos del registro
+--     NEW.fecha_de_facturacion := dia_facturacion;
+--     NEW.fecha_de_pago := dia_pago;
     
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
+--     RETURN NEW;
+-- END;
+-- $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER trg_calcular_tarifa_llamada
-BEFORE INSERT OR UPDATE ON Llamada
-FOR EACH ROW
-EXECUTE FUNCTION calcular_tarifa_llamada();
+-- CREATE TRIGGER trg_calcular_tarifa_llamada
+-- BEFORE INSERT OR UPDATE ON Llamada
+-- FOR EACH ROW
+-- EXECUTE FUNCTION calcular_tarifa_llamada();
