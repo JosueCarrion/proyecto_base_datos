@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION calcular_dia_facturacion(numero_telefono TEXT) 
+CREATE OR REPLACE FUNCTION calcular_dia_facturacion(numero_telefono VARCHAR(15)) 
 RETURNS INT AS $$
 BEGIN
     RETURN CASE RIGHT(TRIM(numero_telefono), 1)
@@ -17,7 +17,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION calcular_dia_pago(numero_telefono TEXT) 
+CREATE OR REPLACE FUNCTION calcular_dia_pago(numero_telefono VARCHAR(15)) 
 RETURNS INT AS $$
 BEGIN
     RETURN CASE RIGHT(TRIM(numero_telefono), 1)
@@ -35,6 +35,7 @@ BEGIN
     END;
 END;
 $$ LANGUAGE plpgsql;
+
 
 
 CREATE TABLE Impuesto (
@@ -184,6 +185,7 @@ CREATE TABLE Llamada (
     segundos INTEGER NOT NULL CHECK (segundos >= 0 AND segundos < 60),
     fecha DATE NOT NULL,
     hora TIME NOT NULL,
+    tarifa NUMERIC (18,5) NULL,
     numero_telefonico VARCHAR(20) NOT NULL,
     codigo_destino VARCHAR(20) NULL,
     PRIMARY KEY (id_llamada),
@@ -248,3 +250,31 @@ CREATE TRIGGER trg_actualizar_fechas_contrato
 BEFORE INSERT OR UPDATE ON contrato
 FOR EACH ROW
 EXECUTE FUNCTION actualizar_fechas_contrato();
+
+CREATE OR REPLACE FUNCTION calcular_tarifa_llamada()
+RETURNS TRIGGER AS $$
+DECLARE
+    dia_facturacion INT;
+    dia_pago INT;
+
+BEGIN
+    dia_facturacion := calcular_dia_facturacion(NEW.numero_telefonico);
+    dia_pago := calcular_dia_pago(NEW.numero_telefonico);
+    
+    -- Si no se pudo determinar el día, usar un valor por defecto (ej. día 1)
+    IF dia_facturacion IS NULL THEN
+        dia_facturacion := 1;
+    END IF;
+    
+    -- Asignar los valores calculados a los campos del registro
+    NEW.fecha_de_facturacion := dia_facturacion;
+    NEW.fecha_de_pago := dia_pago;
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_calcular_tarifa_llamada
+BEFORE INSERT OR UPDATE ON Llamada
+FOR EACH ROW
+EXECUTE FUNCTION calcular_tarifa_llamada();

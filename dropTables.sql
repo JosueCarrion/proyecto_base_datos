@@ -22,4 +22,6 @@ DROP TABLE IF EXISTS Impuesto CASCADE;
 DROP FUNCTION IF EXISTS calcular_dia_pago;
 DROP FUNCTION IF EXISTS calcular_dia_facturacion;
 DROP FUNCTION IF EXISTS actualizar_fechas_contrato;
+DROP FUNCTION IF EXISTS calcular_tarifa_llamada;
 DROP TRIGGER IF EXISTS trg_actualizar_fechas_contrato ON Contrato;
+DROP TRIGGER IF EXISTS trg_calcular_tarifa_llamada ON Llamada;
